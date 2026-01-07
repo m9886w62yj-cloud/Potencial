@@ -1,10 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Check, ArrowLeft, Crown, Star, Sparkles, Dumbbell, Brain, Apple, Zap, Video, Users, Award } from "lucide-react";
+import { Check, ArrowLeft, Crown, Star, Sparkles, Dumbbell, Brain, Video, Zap, Award } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getDaysLeftInTrial, isTrialActive } from "@/lib/subscription";
 
 export default function PlanosPage() {
   const router = useRouter();
+  const [daysLeft, setDaysLeft] = useState(7);
+
+  useEffect(() => {
+    setDaysLeft(getDaysLeftInTrial());
+  }, []);
 
   const handleSelectPlan = (plan: "basico" | "pro" | "monarca") => {
     if (plan === "basico") {
@@ -47,11 +54,18 @@ export default function PlanosPage() {
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Escolha o plano ideal para sua jornada de evolução. Ganhe mais XP, desbloqueie treinos exclusivos e acelere seus resultados.
           </p>
+          {isTrialActive() && (
+            <div className="mt-6 inline-block bg-yellow-500/20 border border-yellow-500/40 rounded-full px-6 py-2">
+              <p className="text-yellow-500 font-semibold">
+                🎁 Você tem {daysLeft} {daysLeft === 1 ? "dia" : "dias"} restantes no período gratuito
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8 mb-12">
-          {/* Básico - Free */}
+          {/* Básico - Free Trial 7 dias */}
           <div className="bg-[#0A0A0A] rounded-2xl p-8 border border-[#3B82F6]/20 hover:border-[#3B82F6]/40 transition-all duration-300 hover:scale-105">
             <div className="flex items-center gap-2 mb-4">
               <Star className="w-6 h-6 text-[#3B82F6]" />
@@ -59,7 +73,8 @@ export default function PlanosPage() {
             </div>
             <div className="mb-6">
               <p className="text-4xl font-bold mb-2">Grátis</p>
-              <p className="text-gray-400">para sempre</p>
+              <p className="text-gray-400">por 7 dias</p>
+              <p className="text-sm text-yellow-500 mt-1">Depois precisa assinar Pro ou Monarca</p>
             </div>
             <ul className="space-y-3 mb-8">
               <Feature text="Treinos básicos (casa & rua)" />
@@ -67,13 +82,12 @@ export default function PlanosPage() {
               <Feature text="Registro de dieta simples" />
               <Feature text="Tracking básico de progresso" />
               <Feature text="Suporte por email" />
-              <Feature text="Anúncios ocasionais" disabled />
             </ul>
             <button 
               onClick={() => handleSelectPlan("basico")}
               className="w-full bg-[#3B82F6]/20 hover:bg-[#3B82F6]/30 text-[#3B82F6] py-4 rounded-xl font-bold transition-all duration-300 border border-[#3B82F6]/30"
             >
-              Começar Grátis
+              Começar Período Gratuito
             </button>
           </div>
 
@@ -128,8 +142,6 @@ export default function PlanosPage() {
               <Feature text="Todos os benefícios do Pro" />
               <Feature text="XP bônus de 100%" />
               <Feature text="Treinos exclusivos Monarca" />
-              <Feature text="Aulas ao vivo semanais" />
-              <Feature text="Consultas mensais com nutricionista" />
               <Feature text="Planos de treino 100% personalizados" />
               <Feature text="Badges e conquistas exclusivas" />
               <Feature text="Acesso antecipado a novidades" />
@@ -167,8 +179,6 @@ export default function PlanosPage() {
                 <ComparisonRow feature="XP Bônus" basic="0%" pro="50%" monarca="100%" />
                 <ComparisonRow feature="Coach IA" basic={false} pro monarca />
                 <ComparisonRow feature="Vídeos explicativos" basic={false} pro monarca />
-                <ComparisonRow feature="Aulas ao vivo" basic={false} pro={false} monarca />
-                <ComparisonRow feature="Nutricionista" basic={false} pro={false} monarca />
                 <ComparisonRow feature="Planos personalizados" basic={false} pro monarca />
                 <ComparisonRow feature="Comunidade exclusiva" basic={false} pro={false} monarca />
                 <ComparisonRow feature="Sem anúncios" basic={false} pro monarca />
@@ -198,9 +208,9 @@ export default function PlanosPage() {
               description="Orientação inteligente adaptada ao seu progresso"
             />
             <BenefitCard
-              icon={Users}
-              title="Comunidade Exclusiva"
-              description="Conecte-se com outros guerreiros Monarca"
+              icon={Award}
+              title="Conquistas Exclusivas"
+              description="Badges e recompensas especiais para membros premium"
             />
           </div>
         </div>
@@ -210,12 +220,12 @@ export default function PlanosPage() {
           <h2 className="text-3xl font-bold mb-8 text-center">Perguntas Frequentes</h2>
           <div className="space-y-4">
             <FAQItem
-              question="Posso cancelar a qualquer momento?"
-              answer="Sim! Você pode cancelar sua assinatura a qualquer momento sem taxas adicionais. Seu acesso continuará até o fim do período pago."
+              question="Como funciona o período gratuito?"
+              answer="Você tem 7 dias de acesso gratuito ao plano Básico. Após esse período, será necessário assinar o plano Pro ou Monarca para continuar usando o app."
             />
             <FAQItem
-              question="Como funciona o período de teste?"
-              answer="O plano Básico é gratuito para sempre. Você pode experimentar antes de fazer upgrade para Pro ou Monarca."
+              question="Posso cancelar a qualquer momento?"
+              answer="Sim! Você pode cancelar sua assinatura a qualquer momento sem taxas adicionais. Seu acesso continuará até o fim do período pago."
             />
             <FAQItem
               question="Posso mudar de plano depois?"

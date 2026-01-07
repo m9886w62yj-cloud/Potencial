@@ -38,8 +38,14 @@ export default function CheckoutPage() {
     // Simular processamento de pagamento
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    // Salvar plano do usuário
+    // Salvar plano do usuário e ativar recursos automaticamente
     setUserPlan(planParam);
+    
+    // Marcar que o pagamento foi concluído
+    if (typeof window !== "undefined") {
+      localStorage.setItem("payment_completed", "true");
+      localStorage.setItem("payment_date", new Date().toISOString());
+    }
     
     setProcessing(false);
     
@@ -116,16 +122,18 @@ export default function CheckoutPage() {
 
             {/* Benefícios */}
             <div className="bg-[#0A0A0A] rounded-2xl p-6 border border-[#3B82F6]/20">
-              <h3 className="font-bold mb-4">O que você ganha:</h3>
+              <h3 className="font-bold mb-4">✨ Ativação Imediata - O que você ganha:</h3>
               <div className="space-y-3">
-                <BenefitItem text={`XP Bônus de ${plan.xpBonus}%`} />
+                <BenefitItem text={`XP Bônus de ${plan.xpBonus}% ativado`} />
                 <BenefitItem text="Treinos exclusivos desbloqueados" />
                 <BenefitItem text="Análise de progresso avançada" />
                 <BenefitItem text="Suporte prioritário 24/7" />
+                <BenefitItem text="Coach IA personalizado" />
+                <BenefitItem text="Biblioteca completa de vídeos" />
                 {planParam === "monarca" && (
                   <>
-                    <BenefitItem text="Consultas com nutricionista" />
                     <BenefitItem text="Badges exclusivos Monarca" />
+                    <BenefitItem text="Comunidade VIP" />
                   </>
                 )}
               </div>
